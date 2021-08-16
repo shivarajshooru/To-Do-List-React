@@ -1,23 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ListItem from "./ListItem";
+import "./styles.css";
 
 function App() {
+  const [items, setItems] = useState([]);
+  const [newitem, setnewItem] = useState("");
+  const addItem = () => {
+    items.push(newitem);
+    setItems([...items]);
+    setnewItem("");
+  };
+  const newic = (evt) => {
+    setnewItem(evt.target.value);
+  };
+
+  const onEdit = (editvalue, itemidx) => {
+    items[itemidx] = editvalue;
+    setItems([...items]);
+  };
+
+  const onDelete = (itemidx) => {
+    items.splice(itemidx, 1);
+    setItems([...items]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div id="main">
+      <h1>TO DO LIST</h1>
+      <div id="add-item">
+        <textarea
+          id="task"
+          onChange={newic}
+          placeholder="New Item"
+          value={newitem}
+        ></textarea>
+        <button
+          id="btn"
+          onClick={addItem}
+          disabled={newitem.trim().length === 0}
         >
-          Learn React
-        </a>
-      </header>
+          Add Item
+        </button>
+      </div>
+
+      {items.map((item, idx) => (
+        <ListItem
+          item={item}
+          key={`${item}_${idx}`}
+          idx={idx}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      ))}
     </div>
   );
 }
